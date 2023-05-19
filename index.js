@@ -28,6 +28,7 @@ async function run() {
 
 
         const categoriesCollection = client.db('dollToy').collection('category')
+        const orderCollection = client.db('dollToy').collection('orders')
 
         // 
         app.get('/categories', async (req, res) => {
@@ -65,6 +66,14 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await categoriesCollection.findOne(query)
+            res.send(result)
+        })
+
+        // order
+        app.post('/orders', async (req, res) => {
+            const ordering = req.body;
+            console.log(ordering)
+            const result = await orderCollection.insertOne(ordering)
             res.send(result)
         })
 
