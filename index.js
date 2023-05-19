@@ -69,18 +69,30 @@ async function run() {
             res.send(result)
         })
 
-        // order
+        // order part
 
         app.get('/orders', async (req, res) => {
             const result = await orderCollection.find().toArray()
             res.send(result)
         })
-        app.post('/orders', async (req, res) => {
-            const ordering = req.body;
-            console.log(ordering)
-            const result = await orderCollection.insertOne(ordering)
+
+
+        app.get('/orders', async (req, res) => {
+            let query = {};
+            if (req.query?.email) {
+                query = { email: req.query.email }
+            }
+            const result = await orderCollection.find(query).toArray()
             res.send(result)
         })
+
+        app.get('/orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await orderCollection.findOne(query)
+            res.send(result)
+        })
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
