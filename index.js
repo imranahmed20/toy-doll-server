@@ -70,6 +70,11 @@ async function run() {
         })
 
         // order
+
+        app.get('/orders', async (req, res) => {
+            const result = await orderCollection.find().toArray()
+            res.send(result)
+        })
         app.post('/orders', async (req, res) => {
             const ordering = req.body;
             console.log(ordering)
