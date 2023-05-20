@@ -30,13 +30,14 @@ async function run() {
         const categoriesCollection = client.db('dollToy').collection('category')
         const orderCollection = client.db('dollToy').collection('orders')
 
-        // 
+        // Get Part
         app.get('/categories', async (req, res) => {
             const query = { category: "Baby Dolls" }
             const cursor = categoriesCollection.find(query)
             const category = await cursor.toArray()
             res.send(category)
         })
+
         app.get('/barbie', async (req, res) => {
             const query = { category: "Barbie Doll" }
             const cursor = categoriesCollection.find(query)
@@ -69,6 +70,7 @@ async function run() {
             res.send(result)
         })
 
+
         // order part
 
         app.get('/orders', async (req, res) => {
@@ -76,10 +78,11 @@ async function run() {
             if (req.query?.email) {
                 query = { email: req.query.email }
             }
-            const result = await orderCollection.find(query).toArray()
+            const cursor = orderCollection.find(query).sort({ price: 1 }).limit(10)
+            const result = await cursor.toArray()
             res.send(result)
         })
-
+        // Post part
         app.post('/orders', async (req, res) => {
             const orders = req.body;
             const result = await orderCollection.insertOne(orders)
@@ -94,6 +97,14 @@ async function run() {
             const result = await orderCollection.findOne(query)
             res.send(result)
         })
+        // app.get('/orders/', async (req, res) => {
+        //     const query = {}
+        //     const curser = orderCollection.find(query).sort({ price: -1 })
+        //     const result = await curser.toArray()
+        //     res.send(result)
+
+
+        // })
         //    put part
 
         app.put('/orders/:id', async (req, res) => {
@@ -105,13 +116,20 @@ async function run() {
             const updateUser = {
                 $set: {
                     name: updateOrder.name,
+                    sellerName: updateOrder.sellerName,
+                    email: updateOrder.email,
+                    photo: updateOrder.photo,
+                    quantity: updateOrder.quantity,
+                    rating: updateOrder.rating,
+                    price: updateOrder.price,
+                    detail: updateOrder.detail,
                     price: updateOrder.price
                 }
             }
             const result = await orderCollection.updateOne(filter, updateUser, options)
             res.send(result)
         })
-
+        // Delete part
         app.delete('/orders/:id', async (req, res) => {
             const id = req.params.id;
             console.log('delete id', id)
