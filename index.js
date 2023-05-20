@@ -94,17 +94,21 @@ async function run() {
             const result = await orderCollection.findOne(query)
             res.send(result)
         })
-        // patch part
-        app.patch('/orders/:id', async (req, res) => {
+        //    put part
+
+        app.put('/orders/:id', async (req, res) => {
             const id = req.params.id;
-            const filter = { _id: new ObjectId(id) }
             const updateOrder = req.body;
-            const updateDoc = {
+            console.log(id, updateOrder)
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true }
+            const updateUser = {
                 $set: {
-                    status: updateOrder.status
+                    name: updateOrder.name,
+                    price: updateOrder.price
                 }
             }
-            const result = await orderCollection.updateOne(filter, updateDoc);
+            const result = await orderCollection.updateOne(filter, updateUser, options)
             res.send(result)
         })
 
