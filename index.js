@@ -31,17 +31,24 @@ async function run() {
         const orderCollection = client.db('dollToy').collection('orders')
 
         // Get Part
+
         app.get('/categories', async (req, res) => {
             const query = { category: "Baby Dolls" }
             const cursor = categoriesCollection.find(query)
             const category = await cursor.toArray()
             res.send(category)
         })
+
+        // post part
+
         app.post('/orders', async (req, res) => {
             const orders = req.body;
             const result = await orderCollection.insertOne(orders)
             res.send(result)
         })
+
+        // Get part
+
         app.get('/orders', async (req, res) => {
             let query = {};
             if (req.query?.email) {
@@ -84,17 +91,14 @@ async function run() {
             res.send(result)
         })
 
-
-
-
-        // update part
-
         app.get('/orders/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await orderCollection.findOne(query)
             res.send(result)
         })
+
+
         //    put part
 
         app.put('/orders/:id', async (req, res) => {
@@ -119,6 +123,8 @@ async function run() {
             const result = await orderCollection.updateOne(filter, updateUser, options)
             res.send(result)
         })
+
+
         // Delete part
         app.delete('/orders/:id', async (req, res) => {
             const id = req.params.id;
