@@ -85,23 +85,7 @@ async function run() {
         })
 
 
-        // order part
 
-        app.get('/orders', async (req, res) => {
-            let query = {};
-            if (req.query?.email) {
-                query = { email: req.query.email }
-            }
-            const cursor = orderCollection.find(query).sort({ price: 1 }).limit(10)
-            const result = await cursor.toArray()
-            res.send(result)
-        })
-        // Post part
-        app.post('/orders', async (req, res) => {
-            const orders = req.body;
-            const result = await orderCollection.insertOne(orders)
-            res.send(result)
-        })
 
         // update part
 
@@ -111,14 +95,6 @@ async function run() {
             const result = await orderCollection.findOne(query)
             res.send(result)
         })
-        // app.get('/orders/', async (req, res) => {
-        //     const query = {}
-        //     const curser = orderCollection.find(query).sort({ price: -1 })
-        //     const result = await curser.toArray()
-        //     res.send(result)
-
-
-        // })
         //    put part
 
         app.put('/orders/:id', async (req, res) => {
